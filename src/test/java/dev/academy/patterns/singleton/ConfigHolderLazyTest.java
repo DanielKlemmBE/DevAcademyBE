@@ -7,8 +7,8 @@ public class ConfigHolderLazyTest {
 
     @Test
     public void getPoolSize() {
-        assertThat(ConfigHolder.getInstance().getPoolSize()).isEqualTo(0);
-        ConfigHolder.getInstance().setPoolSize(25);
-        assertThat(ConfigHolder.getInstance().getPoolSize()).isEqualTo(25);
+        assertThat(ConfigHolderLazy.getInstance().getPoolSize()).isEqualTo(0);
+        ConfigHolderLazy.getInstance().setPoolSize(25);
+        assertThat(ConfigHolderLazy.getInstance().getPoolSize()).isEqualTo(25);
     }
 }
