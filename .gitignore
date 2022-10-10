@@ -1,3 +1,20 @@
-target/*
-target\*
-*.class
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+# Others
+**/*.class
+**/*.bin
+**/*.build
+**/*.out
+build
+build/
+**/*.jar
