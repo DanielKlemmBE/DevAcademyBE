@@ -1,4 +1,4 @@
-package dev.academy.builder;
+package dev.academy.patterns.builder;
 
 import java.util.Optional;
 
