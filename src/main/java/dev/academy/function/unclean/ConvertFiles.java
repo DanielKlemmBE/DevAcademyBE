@@ -28,7 +28,7 @@ public class ConvertFiles {
         new ConvertFiles().doMain(args);
     }
 
-    private void doMain(String[] args) {
+    void doMain(String[] args) {
         CmdLineParser parser = new CmdLineParser(this);
         try {
             // parse arguments
@@ -80,9 +80,11 @@ public class ConvertFiles {
                 headerDone = true;
             }
 
-            System.out.println("output path: " + _outputFilePath);
             // write output file
-            try (FileWriter fw = new FileWriter(_outputFilePath)) {
+            File outputFile = new File(_outputFilePath);
+            outputFile.createNewFile();
+            System.out.println("output path: " + outputFile.getAbsolutePath());
+            try (FileWriter fw = new FileWriter(outputFile)) {
                 fw.write(convertListToString(headerOutputLine, _seperator) + "\n");
                 for (String dataLine : dataOutputLines) {
                     fw.write(dataLine + "\n");
@@ -94,20 +96,20 @@ public class ConvertFiles {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
             return;
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | IOException e) {
             System.err.println("Error: " + e.getMessage());
         }
     }
 
-    public static String convertListToString(List<String> list, String splitter) {
+    static String convertListToString(List<String> list, String splitter) {
         return list.stream().collect(joining(splitter));
     }
 
-    public static List<String> convertStringToList(String line, String splitter) {
+    static List<String> convertStringToList(String line, String splitter) {
         return Arrays.stream(line.split(splitter)).toList();
     }
 
-    private static boolean isNotNull(String... args) {
+    static boolean isNotNull(String... args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i] == null) {
                 return false;
