@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @TestInstance(Lifecycle.PER_CLASS)
 class ConvertFilesIntegrationTest {
-    String _inputPath = "src/test/resources/convertFilesTestResource/in";
+    String _inputPath = "src/test/resources/convertFilesTestResource";
     private File tempFile;
 
     @BeforeEach
