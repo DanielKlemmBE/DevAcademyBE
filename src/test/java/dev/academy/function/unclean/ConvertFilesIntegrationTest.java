@@ -29,8 +29,13 @@ class ConvertFilesIntegrationTest {
 
     @Test
     public void testDoMain() {
+        // setup
         String[] args = {"-i", new File(_inputPath).getPath(), "-o", tempFile.getAbsolutePath(), "-s", ","};
+
+        // to test
         new ConvertFiles().doMain(args);
+
+        // verify
         List<String> lines = readFile(tempFile);
         assertThat(lines).containsExactlyElementsOf(
                 List.of(
