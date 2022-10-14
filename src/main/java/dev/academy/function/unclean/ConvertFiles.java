@@ -17,12 +17,12 @@ public class ConvertFiles {
             "-i"}, required = true, usage = "Sets a path to the root folder you want to parse")
     private String _inputPath;
 
-    @Option(name = "-ouputFile", aliases = {"-o"}, required = true, usage = "Sets the file path to output in")
+    @Option(name = "-outputFile", aliases = {"-o"}, required = true, usage = "Sets the file path to output in")
     private String _outputFilePath;
 
-    @Option(name = "-seperator", aliases = {
-            "-s"}, required = false, usage = "Sets a specific seperator. Default is ','")
-    private String _seperator = ",";
+    @Option(name = "-separator", aliases = {
+            "-s"}, required = false, usage = "Sets a specific separator. Default is ','")
+    private String _separator = ",";
 
     public static void main(String[] args) {
         new ConvertFiles().doMain(args);
@@ -34,7 +34,7 @@ public class ConvertFiles {
             // parse arguments
             parser.parseArgument(args);
             if (!isNotNull(_inputPath, _outputFilePath)) {
-                throw new CmdLineException(parser, "-inputPath and -ouputFile has to be set",
+                throw new CmdLineException(parser, "-inputPath and -outputFile has to be set",
                         new IllegalStateException());
             }
 
@@ -61,10 +61,10 @@ public class ConvertFiles {
                 }
 
                 // convert file
-                List<String> headerRow = convertStringToList(lines.get(0), _seperator);
+                List<String> headerRow = convertStringToList(lines.get(0), _separator);
                 List<String> dataLines = new ArrayList<>();
                 for (int i = 1; i < lines.size(); i++) {
-                    List<String> line = convertStringToList(lines.get(i), _seperator);
+                    List<String> line = convertStringToList(lines.get(i), _separator);
                     if (!headerDone) {
                         // create header for all file once
                         for (int j = 1; j < headerRow.size(); j++) {
@@ -76,7 +76,7 @@ public class ConvertFiles {
                         dataLines.add(line.get(j));
                     }
                 }
-                dataOutputLines.add(convertListToString(dataLines, _seperator));
+                dataOutputLines.add(convertListToString(dataLines, _separator));
                 headerDone = true;
             }
 
@@ -85,7 +85,7 @@ public class ConvertFiles {
             outputFile.createNewFile();
             System.out.println("output path: " + outputFile.getAbsolutePath());
             try (FileWriter fw = new FileWriter(outputFile)) {
-                fw.write(convertListToString(headerOutputLine, _seperator) + "\n");
+                fw.write(convertListToString(headerOutputLine, _separator) + "\n");
                 for (String dataLine : dataOutputLines) {
                     fw.write(dataLine + "\n");
                 }
