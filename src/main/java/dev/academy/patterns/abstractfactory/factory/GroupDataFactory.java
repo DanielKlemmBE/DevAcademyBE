@@ -7,10 +7,21 @@ import org.json.JSONObject;
  * This is boilerplate code, most likely this should be generated
  * */
 public class GroupDataFactory implements Factory<GroupData> {
+
     private static final String type = new GroupData().type();
 
+    private static GroupDataFactory instance;
+
+    private GroupDataFactory() {
+    }
+
+    public static GroupDataFactory instance() {
+        instance = instance == null ? new GroupDataFactory() : instance;
+        return instance;
+    }
+
     @Override
-    public boolean verify(String json) {
+    public boolean assignable(String json) {
         return new JSONObject(json).getString("type").equals(type);
     }
 

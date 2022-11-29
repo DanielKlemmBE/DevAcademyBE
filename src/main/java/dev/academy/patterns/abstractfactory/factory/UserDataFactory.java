@@ -10,8 +10,18 @@ public class UserDataFactory implements Factory<UserData> {
 
     private static final String type = new UserData().type();
 
+    private static UserDataFactory instance;
+
+    private UserDataFactory() {
+    }
+
+    public static UserDataFactory instance() {
+        instance = instance == null ? new UserDataFactory() : instance;
+        return instance;
+    }
+
     @Override
-    public boolean verify(String json) {
+    public boolean assignable(String json) {
         return new JSONObject(json).getString("type").equals(type);
     }
 
