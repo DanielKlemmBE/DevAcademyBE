@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /***
  * This is boilerplate code, most likely this should be generated
  * */
-public class UserDataFactory implements Factory<UserData> {
+public class UserDataFactory extends AbstractFactory<UserData> {
 
     private static final String type = new UserData().type();
 

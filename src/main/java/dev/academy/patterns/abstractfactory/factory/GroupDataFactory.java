@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /***
  * This is boilerplate code, most likely this should be generated
  * */
-public class GroupDataFactory implements Factory<GroupData> {
+public class GroupDataFactory extends AbstractFactory<GroupData> {
 
     private static final String type = new GroupData().type();
 

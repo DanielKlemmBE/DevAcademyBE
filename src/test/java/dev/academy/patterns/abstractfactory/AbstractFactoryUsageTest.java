@@ -1,7 +1,10 @@
 package dev.academy.patterns.abstractfactory;
 
-import dev.academy.patterns.abstractfactory.factory.Factory;
-import dev.academy.patterns.abstractfactory.model.*;
+import dev.academy.patterns.abstractfactory.factory.AbstractFactory;
+import dev.academy.patterns.abstractfactory.model.DataObject;
+import dev.academy.patterns.abstractfactory.model.DataObjectTypes;
+import dev.academy.patterns.abstractfactory.model.GroupData;
+import dev.academy.patterns.abstractfactory.model.UserData;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -10,9 +13,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class FactoryUsageTest {
-
-    AbstractFactory dataObjectFactory = new AbstractFactory();
+public class AbstractFactoryUsageTest {
 
     @Test
     public void deserialize() {
@@ -27,7 +28,7 @@ public class FactoryUsageTest {
 
         // to test
         List<DataObject> deserialized = dataAsJson.stream()
-                .map(json -> dataObjectFactory.deserialize(json)).toList();
+                .map(AbstractFactory::deserialize).toList();
 
         // verify
         assertThat(of).containsExactlyElementsOf(deserialized);
@@ -36,8 +37,8 @@ public class FactoryUsageTest {
     @Test
     public void deserialize_ObjectType() {
         // to test
-        DataObject dataObject1 = dataObjectFactory.deserialize(UserData.of("Stefan", 12, "Halle").toJson());
-        DataObject dataObject2 = dataObjectFactory.deserialize(GroupData.of("Bearingpoint", 1, "everywhere").toJson());
+        DataObject dataObject1 = AbstractFactory.deserialize(UserData.of("Stefan", 12, "Halle").toJson());
+        DataObject dataObject2 = AbstractFactory.deserialize(GroupData.of("Bearingpoint", 1, "everywhere").toJson());
 
         // verify
         assertThat(dataObject1).isInstanceOf(UserData.class);
@@ -46,7 +47,7 @@ public class FactoryUsageTest {
 
     @Test
     public void deserialize_notFound() {
-        assertThatThrownBy(() -> dataObjectFactory.deserialize("{\"type\":\"myType\"}"))
+        assertThatThrownBy(() -> AbstractFactory.deserialize("{\"type\":\"myType\"}"))
                 .hasMessage("can not find factory for Object");
     }
 
@@ -54,14 +55,15 @@ public class FactoryUsageTest {
     public void getFactory_Enum() {
         // to test
         String userString = UserData.of("Stefan", 12, "Halle").toJson();
-        Factory dataObject1 = AbstractFactory.getFactory(DataObjectTypes.USER_DATA);
+        AbstractFactory userFactory = AbstractFactory.getFactory(DataObjectTypes.USER_DATA);
 
         String groupString = GroupData.of("Bearingpoint", 1, "everywhere").toJson();
-        Factory<? extends DataObject> dataObject2 = dataObjectFactory.getFactory(groupString);
+        // does not make too much sense as we use the groupString twice
+        AbstractFactory<? extends DataObject> groupFactory = AbstractFactory.getFactory(groupString);
 
         // verify
-        assertThat(dataObject1.fromJson(userString)).isInstanceOf(UserData.class);
-        assertThat(dataObject2.fromJson(groupString)).isInstanceOf(GroupData.class);
+        assertThat(userFactory.fromJson(userString)).isInstanceOf(UserData.class);
+        assertThat(groupFactory.fromJson(groupString)).isInstanceOf(GroupData.class);
     }
 
     @Test
@@ -77,7 +79,7 @@ public class FactoryUsageTest {
 
         // to test
         List<DataObject> deserialized = dataAsJson.stream()
-                .map(json -> dataObjectFactory.getFactory(json).fromJson(json))
+                .map(json -> AbstractFactory.getFactory(json).fromJson(json))
                 .collect(Collectors.toList());
 
         // verify
@@ -86,7 +88,7 @@ public class FactoryUsageTest {
 
     @Test
     public void getFactory_notFound() {
-        assertThatThrownBy(() -> dataObjectFactory.getFactory("{\"type\":\"myType\"}"))
+        assertThatThrownBy(() -> AbstractFactory.getFactory("{\"type\":\"myType\"}"))
                 .hasMessage("can not find factory for Object");
     }
 
@@ -94,10 +96,10 @@ public class FactoryUsageTest {
     public void getFactory_single() {
         // to test
         String userString = UserData.of("Stefan", 12, "Halle").toJson();
-        Factory dataObject1 = dataObjectFactory.getFactory(userString);
+        AbstractFactory dataObject1 = AbstractFactory.getFactory(userString);
 
         String groupString = GroupData.of("Bearingpoint", 1, "everywhere").toJson();
-        Factory<? extends DataObject> dataObject2 = dataObjectFactory.getFactory(groupString);
+        AbstractFactory<? extends DataObject> dataObject2 = AbstractFactory.getFactory(groupString);
 
         // verify
         assertThat(dataObject1.fromJson(userString)).isInstanceOf(UserData.class);
